@@ -6,7 +6,13 @@
  * mineral stone diagrams, interactive intention filters, and concierge enquiries.
  */
 
-import { BRAND_CONFIG, INTENTION_PILLARS, BRACELET_CATEGORIES, BRACELET_DATA } from './data.js?v=2.2';
+(function () {
+  'use strict';
+
+  const BRAND_CONFIG = window.BRAND_CONFIG || {};
+  const INTENTION_PILLARS = window.INTENTION_PILLARS || [];
+  const BRACELET_CATEGORIES = window.BRACELET_CATEGORIES || [];
+  const BRACELET_DATA = window.BRACELET_DATA || [];
 
 // Clear any previous custom test items from localStorage so official dataset renders cleanly
 try {
@@ -530,9 +536,11 @@ function initEnquiryForm() {
   });
 }
 
-function escapeHTML(str) {
-  if (!str) return '';
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
+  function escapeHTML(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+})();
+

@@ -5,7 +5,10 @@
  * client product specifications, authentic photography, and metaphysical benefits.
  */
 
-export const BRAND_CONFIG = {
+(function () {
+  'use strict';
+
+  const BRAND_CONFIG = {
   name: "L'AURUM ATELIER",
   tagline: "Fine Astrology & Intention Bracelets",
   heroTitle: "Bracelets Designed With Intention",
@@ -21,7 +24,7 @@ export const BRAND_CONFIG = {
   year: new Date().getFullYear()
 };
 
-export const INTENTION_PILLARS = [
+const INTENTION_PILLARS = [
   {
     id: "prosperity-career",
     eyebrow: "Intentional Prosperity",
@@ -64,7 +67,7 @@ export const INTENTION_PILLARS = [
   }
 ];
 
-export const BRACELET_CATEGORIES = [
+const BRACELET_CATEGORIES = [
   { id: "all", label: "Complete Collection (22)" },
   { id: "prosperity-career", label: "Prosperity & Career" },
   { id: "health-wellness", label: "Health & Vitality" },
@@ -73,7 +76,7 @@ export const BRACELET_CATEGORIES = [
   { id: "focus-wisdom", label: "Focus & Intellect" }
 ];
 
-export const BRACELET_DATA = [
+const BRACELET_DATA = [
   {
     id: "BR02-076",
     code: "BR02-076",
@@ -718,3 +721,12 @@ export const BRACELET_DATA = [
     isFeatured: true
   }
 ];
+
+  // Attach globally to window for direct file:// browser viewing and static hosting
+  if (typeof window !== 'undefined') {
+    window.BRAND_CONFIG = BRAND_CONFIG;
+    window.INTENTION_PILLARS = INTENTION_PILLARS;
+    window.BRACELET_CATEGORIES = BRACELET_CATEGORIES;
+    window.BRACELET_DATA = BRACELET_DATA;
+  }
+})();
