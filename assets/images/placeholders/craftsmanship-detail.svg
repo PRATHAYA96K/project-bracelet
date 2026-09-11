@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="craftBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#07130F"/>
+      <stop offset="100%" stop-color="#0E231B"/>
+    </linearGradient>
+    <radialGradient id="craftAura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#265C45" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#07130F" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#craftBg)"/>
+  <circle cx="400" cy="230" r="220" fill="url(#craftAura)"/>
+  <rect x="20" y="20" width="760" height="460" fill="none" stroke="#C9A96E" stroke-opacity="0.25" stroke-width="1" stroke-dasharray="6 6"/>
+
+  <g transform="translate(400, 200)">
+    <circle cx="0" cy="0" r="90" fill="none" stroke="#C9A96E" stroke-width="1" stroke-opacity="0.4"/>
+    <circle cx="0" cy="0" r="110" fill="none" stroke="#265C45" stroke-width="1.2" stroke-opacity="0.5" stroke-dasharray="3 4"/>
+    <path d="M 0 -30 L 4 -7 L 27 0 L 4 7 L 0 30 L -4 7 L -27 0 L -4 -7 Z" fill="#C9A96E" fill-opacity="0.6"/>
+  </g>
+
+  <text x="400" y="340" text-anchor="middle" font-family="'Cormorant Garamond', Georgia, serif" font-size="24" letter-spacing="3" fill="#FAF7F0">NATURAL STONES &amp; MINDFUL INTENTION</text>
+  <text x="400" y="372" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" letter-spacing="2" fill="#C9A96E" text-transform="uppercase">Red Jasper · Pyrite · Green Aventurine · Clear Quartz · Sodalite · Sunstone</text>
+  <text x="400" y="405" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" letter-spacing="1.5" fill="#7E9E92">[Client Mineral Detail / Workshop Photograph Placeholder]</text>
+</svg>
