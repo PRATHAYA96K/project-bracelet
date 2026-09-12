@@ -1,5 +1,5 @@
 /**
- * L'AURUM ATELIER — AUTHENTIC ASTROLOGY & INTENTION BRACELET DATASET
+ * SATTVA — AUTHENTIC ASTROLOGY & INTENTION BRACELET DATASET
  * 
  * Complete 22-piece private intention catalogue extracted directly from
  * client product specifications, authentic photography, and metaphysical benefits.
@@ -9,17 +9,18 @@
   'use strict';
 
   const BRAND_CONFIG = {
-  name: "L'AURUM ATELIER",
+  name: "SATTVA",
   tagline: "Fine Astrology & Intention Bracelets",
   heroTitle: "Bracelets Designed With Intention",
   heroSubtitle: "A curated digital showcase of fine astrology-inspired wristwear, hand-strung with natural mineral stones to honor intentions of clarity, abundance, inner strength, and harmony.",
   heroBadge: "Private Intention Showcase · Non-Commercial Catalogue",
   heroImage: "assets/images/products/hero-pedestal-bracelet.jpg",
-  heroImageAlt: "L'AURUM Atelier Fine Intention Bracelet Showcase",
+  heroImageAlt: "SATTVA Fine Intention Bracelet Showcase",
   craftsmanshipImage: "assets/images/products/dhanyog-studio.jpg",
-  enquiryEmail: "concierge@laurum-atelier.com",
-  enquiryWhatsApp: "+1 (555) 019-2834",
-  whatsappNumberDigits: "15550192834",
+  enquiryEmail: "valo96k@gmail.com",
+  enquiryMobile: "+91 76663 68056",
+  enquiryWhatsApp: "+91 76663 68056",
+  whatsappNumberDigits: "917666368056",
   wellnessDisclaimer: "These descriptions reflect the intended spiritual and wellness positioning of the collection and are not medical advice or guarantees of health outcomes.",
   year: new Date().getFullYear()
 };

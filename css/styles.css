@@ -220,6 +220,22 @@ button {
   transform: translateY(-2px);
 }
 
+.btn-whatsapp {
+  background: #25d366;
+  color: #ffffff;
+  border: 1px solid #25d366;
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.25);
+  font-weight: 600;
+}
+
+.btn-whatsapp:hover {
+  background: #20ba5a;
+  border-color: #20ba5a;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+}
+
 .btn-icon {
   width: 14px;
   height: 14px;
@@ -269,10 +285,11 @@ button {
 
 .brand-name {
   font-family: var(--font-serif);
-  font-size: 1.45rem;
-  letter-spacing: 0.18em;
-  font-weight: 500;
+  font-size: 1.55rem;
+  letter-spacing: 0.32em;
+  font-weight: 600;
   color: var(--text-primary);
+  text-transform: uppercase;
 }
 
 .brand-tagline {

@@ -321,6 +321,12 @@ function openModal(id) {
   if (modalPositioning) modalPositioning.textContent = `"${piece.positioning}"`;
   if (modalDescription) modalDescription.textContent = piece.fullDescription;
 
+  const modalWhatsAppBtn = document.getElementById('modalWhatsAppBtn');
+  if (modalWhatsAppBtn) {
+    const waMsg = `Hello SATTVA, I am interested in learning more about the ${piece.name} (${piece.code}) intention bracelet.`;
+    modalWhatsAppBtn.href = `https://wa.me/917666368056?text=${encodeURIComponent(waMsg)}`;
+  }
+
   // View toggle for pieces with full posters
   if (modalViewToggle) {
     if (piece.posterImage) {
@@ -493,46 +499,126 @@ function initFooterLinks() {
 }
 
 /**
- * Concierge enquiry form submission (Non-commercial)
+ * Workable Concierge enquiry form submission (WhatsApp instant dispatch & Email routing)
  */
 function initEnquiryForm() {
   const form = document.getElementById('enquiryForm');
   const statusMsg = document.getElementById('formStatusMsg');
+  const whatsappBtn = document.getElementById('submitWhatsAppBtn');
   if (!form || !statusMsg) return;
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
+  function getFormData() {
     const nameInput = document.getElementById('clientName');
     const emailInput = document.getElementById('clientEmail');
+    const phoneInput = document.getElementById('clientPhone');
     const pieceSelect = document.getElementById('pieceSelect');
+    const messageInput = document.getElementById('clientMessage');
 
-    const name = nameInput?.value.trim();
-    const email = emailInput?.value.trim();
-    const piece = pieceSelect?.value;
+    return {
+      name: nameInput?.value.trim() || '',
+      email: emailInput?.value.trim() || '',
+      phone: phoneInput?.value.trim() || '',
+      piece: pieceSelect?.value || 'General Collection Enquiry',
+      message: messageInput?.value.trim() || ''
+    };
+  }
 
-    if (!name || !email) {
-      statusMsg.className = 'form-status-msg';
-      statusMsg.style.display = 'block';
-      statusMsg.style.background = 'rgba(229, 62, 62, 0.15)';
-      statusMsg.style.borderColor = 'rgba(229, 62, 62, 0.4)';
-      statusMsg.style.color = '#feb2b2';
-      statusMsg.textContent = 'Please provide both your name and email address to proceed with your enquiry.';
-      return;
+  function validate(requireEmail = true) {
+    const data = getFormData();
+    if (!data.name) {
+      showError('Please provide your name to proceed with your enquiry.');
+      document.getElementById('clientName')?.focus();
+      return null;
     }
+    if (requireEmail && !data.email) {
+      showError('Please provide your email address so our concierge can reach you.');
+      document.getElementById('clientEmail')?.focus();
+      return null;
+    }
+    if (!data.email && !data.phone) {
+      showError('Please provide either your phone number or email address.');
+      return null;
+    }
+    return data;
+  }
 
+  function showError(msg) {
+    statusMsg.className = 'form-status-msg';
+    statusMsg.style.display = 'block';
+    statusMsg.style.background = 'rgba(229, 62, 62, 0.15)';
+    statusMsg.style.borderColor = 'rgba(229, 62, 62, 0.4)';
+    statusMsg.style.color = '#feb2b2';
+    statusMsg.textContent = msg;
+  }
+
+  function showSuccess(html) {
     statusMsg.className = 'form-status-msg success';
-    statusMsg.innerHTML = `
-      <strong>Enquiry Received for ${escapeHTML(piece)}.</strong><br>
-      Thank you, ${escapeHTML(name)}. Our concierge will review your enquiry and reply to <em>${escapeHTML(email)}</em> with full mineral specifications and consultation details.
-    `;
+    statusMsg.style.display = 'block';
+    statusMsg.style.background = 'rgba(37, 211, 102, 0.12)';
+    statusMsg.style.borderColor = 'rgba(37, 211, 102, 0.4)';
+    statusMsg.style.color = '#d6f8e2';
+    statusMsg.innerHTML = html;
+  }
 
-    form.reset();
-    if (pieceSelect) pieceSelect.value = 'General Collection Enquiry';
+  // Direct WhatsApp Submission
+  if (whatsappBtn) {
+    whatsappBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const data = validate(false);
+      if (!data) return;
 
-    setTimeout(() => {
-      statusMsg.style.display = 'none';
-    }, 10000);
+      const lines = [
+        `✦ *SATTVA ATELIER CONCIERGE ENQUIRY* ✦`,
+        ``,
+        `• *Client Name:* ${data.name}`,
+        data.phone ? `• *Phone / WhatsApp:* ${data.phone}` : null,
+        data.email ? `• *Email:* ${data.email}` : null,
+        `• *Piece of Interest:* ${data.piece}`,
+        ``,
+        `• *Notes / Sizing:* ${data.message || 'Kindly share availability, stone alignment, and consultation details.'}`
+      ].filter(Boolean).join('\n');
+
+      const waUrl = `https://wa.me/917666368056?text=${encodeURIComponent(lines)}`;
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
+
+      showSuccess(`
+        <strong>✓ Connecting to SATTVA WhatsApp Concierge...</strong><br>
+        A chat window has opened with your enquiry pre-filled for <em>${escapeHTML(data.piece)}</em>.<br>
+        You can also email us directly at <a href="mailto:valo96k@gmail.com" style="color: var(--gold-light); text-decoration: underline;">valo96k@gmail.com</a> or call <a href="tel:+917666368056" style="color: var(--gold-light); text-decoration: underline;">+91 76663 68056</a>.
+      `);
+    });
+  }
+
+  // Email Submission (Form submit)
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = validate(true);
+    if (!data) return;
+
+    const subject = `SATTVA Intention Bracelet Enquiry — ${data.piece}`;
+    const body = [
+      `Dear SATTVA Concierge,`,
+      ``,
+      `I am inquiring about the following intention bracelet piece:`,
+      `Piece: ${data.piece}`,
+      ``,
+      `Client Information:`,
+      `Name: ${data.name}`,
+      `Email: ${data.email}`,
+      data.phone ? `Phone: ${data.phone}` : null,
+      ``,
+      `Message & Sizing Consultation Notes:`,
+      data.message || `Please provide availability, stone consultation, and ordering details.`
+    ].filter(Boolean).join('\n');
+
+    const mailtoUrl = `mailto:valo96k@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoUrl;
+
+    showSuccess(`
+      <strong>✓ Launching Email to valo96k@gmail.com...</strong><br>
+      Your email app has been opened with your enquiry for <em>${escapeHTML(data.piece)}</em> pre-filled.<br>
+      For immediate response, you can also reach us via WhatsApp at <a href="https://wa.me/917666368056" target="_blank" style="color: #25d366; text-decoration: underline; font-weight: 500;">+91 76663 68056</a>.
+    `);
   });
 }
 
