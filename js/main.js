@@ -324,7 +324,7 @@ function openModal(id) {
   const modalWhatsAppBtn = document.getElementById('modalWhatsAppBtn');
   if (modalWhatsAppBtn) {
     const waMsg = `Hello SATTVA, I am interested in learning more about the ${piece.name} (${piece.code}) intention bracelet.`;
-    modalWhatsAppBtn.href = `https://wa.me/917666368056?text=${encodeURIComponent(waMsg)}`;
+    modalWhatsAppBtn.href = `https://api.whatsapp.com/send?phone=917666368056&text=${encodeURIComponent(waMsg)}`;
   }
 
   // View toggle for pieces with full posters
@@ -499,7 +499,7 @@ function initFooterLinks() {
 }
 
 /**
- * Workable Concierge enquiry form submission (WhatsApp instant dispatch & Email routing)
+ * Workable Concierge enquiry form submission (WhatsApp instant dispatch, Gmail Web, and AJAX routing)
  */
 function initEnquiryForm() {
   const form = document.getElementById('enquiryForm');
@@ -551,13 +551,34 @@ function initEnquiryForm() {
     statusMsg.textContent = msg;
   }
 
-  function showSuccess(html) {
-    statusMsg.className = 'form-status-msg success';
-    statusMsg.style.display = 'block';
-    statusMsg.style.background = 'rgba(37, 211, 102, 0.12)';
-    statusMsg.style.borderColor = 'rgba(37, 211, 102, 0.4)';
-    statusMsg.style.color = '#d6f8e2';
-    statusMsg.innerHTML = html;
+  function buildWhatsAppMessage(data) {
+    return [
+      `*✦ SATTVA ATELIER CONCIERGE ENQUIRY ✦*`,
+      ``,
+      `• *Client Name:* ${data.name}`,
+      data.phone ? `• *Phone / WhatsApp:* ${data.phone}` : null,
+      data.email ? `• *Email:* ${data.email}` : null,
+      `• *Piece of Interest:* ${data.piece}`,
+      ``,
+      `• *Notes / Sizing:* ${data.message || 'Kindly share availability, stone alignment, and consultation details.'}`
+    ].filter(Boolean).join('\n');
+  }
+
+  function buildEmailBody(data) {
+    return [
+      `Dear SATTVA Concierge,`,
+      ``,
+      `I am inquiring about the following intention bracelet piece:`,
+      `Piece: ${data.piece}`,
+      ``,
+      `Client Information:`,
+      `Name: ${data.name}`,
+      `Email: ${data.email || 'Not provided'}`,
+      data.phone ? `Phone: ${data.phone}` : null,
+      ``,
+      `Message & Sizing Consultation Notes:`,
+      data.message || `Please provide availability, stone consultation, and ordering details.`
+    ].filter(Boolean).join('\n');
   }
 
   // Direct WhatsApp Submission
@@ -567,25 +588,40 @@ function initEnquiryForm() {
       const data = validate(false);
       if (!data) return;
 
-      const lines = [
-        `✦ *SATTVA ATELIER CONCIERGE ENQUIRY* ✦`,
-        ``,
-        `• *Client Name:* ${data.name}`,
-        data.phone ? `• *Phone / WhatsApp:* ${data.phone}` : null,
-        data.email ? `• *Email:* ${data.email}` : null,
-        `• *Piece of Interest:* ${data.piece}`,
-        ``,
-        `• *Notes / Sizing:* ${data.message || 'Kindly share availability, stone alignment, and consultation details.'}`
-      ].filter(Boolean).join('\n');
+      const lines = buildWhatsAppMessage(data);
+      const encodedMsg = encodeURIComponent(lines);
+      const waUniversalUrl = `https://api.whatsapp.com/send?phone=917666368056&text=${encodedMsg}`;
+      const waShortUrl = `https://wa.me/917666368056?text=${encodedMsg}`;
 
-      const waUrl = `https://wa.me/917666368056?text=${encodeURIComponent(lines)}`;
-      window.open(waUrl, '_blank', 'noopener,noreferrer');
+      // Copy text to clipboard as seamless backup
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(lines).catch(() => {});
+      }
 
-      showSuccess(`
-        <strong>✓ Connecting to SATTVA WhatsApp Concierge...</strong><br>
-        A chat window has opened with your enquiry pre-filled for <em>${escapeHTML(data.piece)}</em>.<br>
-        You can also email us directly at <a href="mailto:valo96k@gmail.com" style="color: var(--gold-light); text-decoration: underline;">valo96k@gmail.com</a> or call <a href="tel:+917666368056" style="color: var(--gold-light); text-decoration: underline;">+91 76663 68056</a>.
-      `);
+      statusMsg.className = 'form-status-msg success';
+      statusMsg.style.display = 'block';
+      statusMsg.style.background = 'rgba(37, 211, 102, 0.12)';
+      statusMsg.style.borderColor = 'rgba(37, 211, 102, 0.4)';
+      statusMsg.style.color = '#d6f8e2';
+      statusMsg.innerHTML = `
+        <div style="line-height: 1.6;">
+          <strong style="color: #25d366; font-size: 0.95rem;">✦ Connecting to SATTVA WhatsApp Concierge...</strong><br>
+          <span style="font-size: 0.85rem; color: #d6f8e2;">Opening WhatsApp with your enquiry for <em>${escapeHTML(data.piece)}</em>.</span>
+          <div style="display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.85rem;">
+            <a href="${waUniversalUrl}" class="btn btn-whatsapp" style="width: 100%; justify-content: center;">
+              Tap Here to Open WhatsApp (+91 76663 68056)
+            </a>
+            <a href="${waShortUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="width: 100%; justify-content: center; font-size: 0.72rem;">
+              Alternative WhatsApp Link
+            </a>
+          </div>
+        </div>
+      `;
+
+      // Direct navigation immediately launches WhatsApp app on mobile without popup blockers
+      setTimeout(() => {
+        window.location.href = waUniversalUrl;
+      }, 250);
     });
   }
 
@@ -596,29 +632,67 @@ function initEnquiryForm() {
     if (!data) return;
 
     const subject = `SATTVA Intention Bracelet Enquiry — ${data.piece}`;
-    const body = [
-      `Dear SATTVA Concierge,`,
-      ``,
-      `I am inquiring about the following intention bracelet piece:`,
-      `Piece: ${data.piece}`,
-      ``,
-      `Client Information:`,
-      `Name: ${data.name}`,
-      `Email: ${data.email}`,
-      data.phone ? `Phone: ${data.phone}` : null,
-      ``,
-      `Message & Sizing Consultation Notes:`,
-      data.message || `Please provide availability, stone consultation, and ordering details.`
-    ].filter(Boolean).join('\n');
-
+    const body = buildEmailBody(data);
     const mailtoUrl = `mailto:valo96k@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoUrl;
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=valo96k@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const waUrl = `https://api.whatsapp.com/send?phone=917666368056&text=${encodeURIComponent(buildWhatsAppMessage(data))}`;
 
-    showSuccess(`
-      <strong>✓ Launching Email to valo96k@gmail.com...</strong><br>
-      Your email app has been opened with your enquiry for <em>${escapeHTML(data.piece)}</em> pre-filled.<br>
-      For immediate response, you can also reach us via WhatsApp at <a href="https://wa.me/917666368056" target="_blank" style="color: #25d366; text-decoration: underline; font-weight: 500;">+91 76663 68056</a>.
-    `);
+    // 1. Send silent background delivery via FormSubmit AJAX to ensure valo96k@gmail.com receives the submission
+    try {
+      fetch('https://formsubmit.co/ajax/valo96k@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          clientName: data.name,
+          clientEmail: data.email,
+          clientPhone: data.phone || 'Not provided',
+          braceletOfInterest: data.piece,
+          clientMessage: data.message || 'Consultation request',
+          _subject: `SATTVA Intention Enquiry: ${data.piece} from ${data.name}`
+        })
+      }).catch(() => {});
+    } catch (err) {}
+
+    // 2. Copy details to clipboard
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(body).catch(() => {});
+    }
+
+    // 3. Display multi-option dispatch box
+    statusMsg.className = 'form-status-msg success';
+    statusMsg.style.display = 'block';
+    statusMsg.style.background = 'rgba(201, 169, 110, 0.12)';
+    statusMsg.style.borderColor = 'rgba(201, 169, 110, 0.4)';
+    statusMsg.style.color = '#fdfbf7';
+    statusMsg.innerHTML = `
+      <div style="line-height: 1.6;">
+        <strong style="color: var(--gold-light); font-size: 0.95rem;">✦ Enquiry Prepared for SATTVA Concierge</strong><br>
+        <span style="font-size: 0.84rem; color: var(--text-secondary);">
+          Piece: <em>${escapeHTML(data.piece)}</em> · Choose how you would like to send your enquiry:
+        </span>
+        <div style="display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.85rem;">
+          <a href="${gmailUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 0.76rem;">
+            ✉️ Open Directly in Gmail (Web Browser)
+          </a>
+          <a href="${mailtoUrl}" class="btn btn-outline" style="width: 100%; justify-content: center; font-size: 0.76rem;">
+            📬 Open in Default Mail App (Apple Mail / Outlook)
+          </a>
+          <a href="${waUrl}" class="btn btn-whatsapp" style="width: 100%; justify-content: center; font-size: 0.76rem;">
+            💬 Or Send via WhatsApp (+91 76663 68056)
+          </a>
+        </div>
+      </div>
+    `;
+
+    // Attempt mailto launch
+    setTimeout(() => {
+      try {
+        window.location.href = mailtoUrl;
+      } catch (err) {}
+    }, 400);
   });
 }
 

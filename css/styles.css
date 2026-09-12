@@ -1798,11 +1798,18 @@ textarea.form-control {
 
 @media (max-width: 768px) {
   :root {
-    --navbar-height: 72px;
+    --navbar-height: 70px;
+  }
+
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
   }
 
   .container {
-    padding: 0 1.25rem;
+    padding: 0 1.15rem;
+    width: 100%;
+    max-width: 100%;
   }
 
   .nav-menu,
@@ -1814,50 +1821,294 @@ textarea.form-control {
     display: flex;
   }
 
+  /* Hero Section */
   .hero-section {
-    padding: calc(var(--navbar-height) + 1.5rem) 0 4rem;
+    padding: calc(var(--navbar-height) + 1.25rem) 0 3.5rem;
+    min-height: auto;
   }
 
   .hero-title {
-    font-size: 2.4rem;
+    font-size: clamp(2.1rem, 7.5vw, 2.6rem);
+    line-height: 1.15;
   }
 
+  .hero-desc {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  .catalogue-badge {
+    font-size: 0.64rem;
+    letter-spacing: 0.12em;
+    padding: 0.35rem 0.8rem;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .hero-ctas {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .hero-ctas .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-footnote {
+    font-size: 0.68rem;
+    text-align: center;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  .hero-footnote-line {
+    display: none;
+  }
+
+  /* Filter Tabs - Smooth swipe pill track */
+  .filter-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    padding: 0.4rem 0.25rem 0.85rem;
+    margin-bottom: 2rem;
+    gap: 0.5rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .filter-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-tab {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 0.5rem 0.95rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* Collection Grid & Cards */
+  .collection-section {
+    padding: 3.5rem 0 4.5rem;
+  }
+
+  .collection-header {
+    margin-bottom: 2rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.85rem, 6vw, 2.3rem);
+  }
+
+  .section-subtitle {
+    font-size: 0.88rem;
+    line-height: 1.65;
+  }
+
+  .bracelet-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .bracelet-card {
+    border-radius: var(--radius-sm);
+  }
+
+  .card-media {
+    width: 100%;
+  }
+
+  .card-badge {
+    top: 0.75rem;
+    left: 0.75rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .card-code-pill {
+    top: 0.75rem;
+    right: 0.75rem;
+    font-size: 0.6rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .card-body {
+    padding: 1.35rem 1.15rem 1.5rem;
+  }
+
+  .card-title {
+    font-size: 1.45rem;
+  }
+
+  .card-positioning-quote {
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .card-desc {
+    font-size: 0.82rem;
+    line-height: 1.6;
+    margin-bottom: 1.15rem;
+  }
+
+  .card-stones-container {
+    gap: 0.35rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .stone-pill {
+    font-size: 0.68rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .card-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+    padding-top: 1rem;
+  }
+
+  .card-btn {
+    width: 100%;
+    justify-content: space-between;
+    font-size: 0.72rem;
+  }
+
+  .card-view-label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* Intention Concept Cards */
   .intention-grid {
     grid-template-columns: 1fr;
     gap: 1.25rem;
   }
 
-  .stone-row {
-    grid-template-columns: 1fr;
-    gap: 0.25rem;
+  .intention-card {
+    padding: 1.5rem 1.25rem;
   }
 
-  .modal-content-grid {
+  /* Editorial & About */
+  .editorial-separator {
+    padding: 3.5rem 0;
+  }
+
+  .editorial-grid {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 2.5rem;
+  }
+
+  .about-section {
+    padding: 3.5rem 0;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .about-decor {
     padding: 2rem 1.5rem;
-  }
-
-  .modal-backdrop {
-    padding: 1rem;
   }
 
   .about-values {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 
-  .craft-pillars {
+  /* Contact & Enquiry */
+  .contact-section {
+    padding: 3.5rem 0 4.5rem;
+  }
+
+  .contact-grid {
     grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .enquiry-form-card {
+    padding: 1.6rem 1.15rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .channel-card {
+    padding: 1rem 1.15rem;
+  }
+
+  .channel-details h4 {
+    font-size: 0.75rem;
+  }
+
+  .channel-details p {
+    font-size: 0.82rem;
+  }
+
+  /* Modal on Mobile */
+  .modal-backdrop {
+    padding: 0.75rem;
+  }
+
+  .modal-container {
+    max-height: 94vh;
+    border-radius: var(--radius-sm);
+  }
+
+  .modal-close-btn {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 34px;
+    height: 34px;
+  }
+
+  .modal-content-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.75rem 1.15rem;
+  }
+
+  .modal-piece-title {
+    font-size: 1.65rem;
+  }
+
+  .stone-row {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+
+  .stone-row-name {
+    font-size: 0.88rem;
+  }
+
+  .stone-row-desc {
+    font-size: 0.78rem;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 3.5rem 0 2rem;
   }
 
   .footer-top {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 2.25rem;
+    margin-bottom: 2.5rem;
   }
 
   .footer-bottom {
     flex-direction: column;
     text-align: center;
+    gap: 0.75rem;
   }
 }
 
