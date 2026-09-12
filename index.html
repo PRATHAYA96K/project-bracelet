@@ -360,7 +360,25 @@
 
               <div class="form-group">
                 <label for="clientPhone">Phone / WhatsApp (Optional)</label>
-                <input type="tel" id="clientPhone" name="phone" class="form-control" placeholder="e.g. +91 98765 43210">
+                <div class="phone-input-group">
+                  <select id="countryCode" name="countryCode" class="country-code-select" aria-label="Country calling code">
+                    <option value="+91" selected>🇮🇳 +91 (IN)</option>
+                    <option value="+1">🇺🇸 +1 (US)</option>
+                    <option value="+44">🇬🇧 +44 (UK)</option>
+                    <option value="+971">🇦🇪 +971 (UAE)</option>
+                    <option value="+61">🇦🇺 +61 (AU)</option>
+                    <option value="+65">🇸🇬 +65 (SG)</option>
+                    <option value="+60">🇲🇾 +60 (MY)</option>
+                    <option value="+49">🇩🇪 +49 (DE)</option>
+                    <option value="+33">🇫🇷 +33 (FR)</option>
+                    <option value="+966">🇸🇦 +966 (SA)</option>
+                    <option value="+974">🇶🇦 +974 (QA)</option>
+                    <option value="+64">🇳🇿 +64 (NZ)</option>
+                    <option value="+27">🇿🇦 +27 (ZA)</option>
+                    <option value="">Other</option>
+                  </select>
+                  <input type="tel" id="clientPhone" name="phone" class="form-control" placeholder="98765 43210">
+                </div>
               </div>
 
               <div class="form-group">

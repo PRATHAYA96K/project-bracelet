@@ -510,15 +510,29 @@ function initEnquiryForm() {
   function getFormData() {
     const nameInput = document.getElementById('clientName');
     const emailInput = document.getElementById('clientEmail');
+    const countryCodeSelect = document.getElementById('countryCode');
     const phoneInput = document.getElementById('clientPhone');
     const addressInput = document.getElementById('clientAddress');
     const pieceSelect = document.getElementById('pieceSelect');
     const messageInput = document.getElementById('clientMessage');
 
+    const countryCode = countryCodeSelect?.value || '+91';
+    const rawPhone = phoneInput?.value.trim() || '';
+    let formattedPhone = '';
+    if (rawPhone) {
+      if (rawPhone.startsWith('+')) {
+        formattedPhone = rawPhone;
+      } else if (countryCode) {
+        formattedPhone = `${countryCode} ${rawPhone}`;
+      } else {
+        formattedPhone = rawPhone;
+      }
+    }
+
     return {
       name: nameInput?.value.trim() || '',
       email: emailInput?.value.trim() || '',
-      phone: phoneInput?.value.trim() || '',
+      phone: formattedPhone,
       address: addressInput?.value.trim() || '',
       piece: pieceSelect?.value || 'General Collection Enquiry',
       message: messageInput?.value.trim() || ''
