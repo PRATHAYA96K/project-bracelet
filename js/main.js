@@ -511,6 +511,7 @@ function initEnquiryForm() {
     const nameInput = document.getElementById('clientName');
     const emailInput = document.getElementById('clientEmail');
     const phoneInput = document.getElementById('clientPhone');
+    const addressInput = document.getElementById('clientAddress');
     const pieceSelect = document.getElementById('pieceSelect');
     const messageInput = document.getElementById('clientMessage');
 
@@ -518,6 +519,7 @@ function initEnquiryForm() {
       name: nameInput?.value.trim() || '',
       email: emailInput?.value.trim() || '',
       phone: phoneInput?.value.trim() || '',
+      address: addressInput?.value.trim() || '',
       piece: pieceSelect?.value || 'General Collection Enquiry',
       message: messageInput?.value.trim() || ''
     };
@@ -558,6 +560,7 @@ function initEnquiryForm() {
       `• *Client Name:* ${data.name}`,
       data.phone ? `• *Phone / WhatsApp:* ${data.phone}` : null,
       data.email ? `• *Email:* ${data.email}` : null,
+      data.address ? `• *Address:* ${data.address}` : null,
       `• *Piece of Interest:* ${data.piece}`,
       ``,
       `• *Notes / Sizing:* ${data.message || 'Kindly share availability, stone alignment, and consultation details.'}`
@@ -575,6 +578,7 @@ function initEnquiryForm() {
       `Name: ${data.name}`,
       `Email: ${data.email || 'Not provided'}`,
       data.phone ? `Phone: ${data.phone}` : null,
+      data.address ? `Address: ${data.address}` : null,
       ``,
       `Message & Sizing Consultation Notes:`,
       data.message || `Please provide availability, stone consultation, and ordering details.`
@@ -649,6 +653,7 @@ function initEnquiryForm() {
           clientName: data.name,
           clientEmail: data.email,
           clientPhone: data.phone || 'Not provided',
+          clientAddress: data.address || 'Not provided',
           braceletOfInterest: data.piece,
           clientMessage: data.message || 'Consultation request',
           _subject: `SATTVA Intention Enquiry: ${data.piece} from ${data.name}`
