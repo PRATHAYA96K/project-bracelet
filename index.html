@@ -176,6 +176,19 @@
           </p>
         </div>
 
+        <!-- Live Stone & Intention Search Bar -->
+        <div class="collection-search-bar">
+          <div class="search-input-wrapper">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="collectionSearchInput" placeholder="Search by stone (Pyrite, Citrine, Jade...) or intention (Career, Protection, Love...)" aria-label="Search bracelets by mineral stone or intention">
+            <button type="button" id="clearSearchBtn" class="clear-search-btn" aria-label="Clear search" style="display: none;">✕</button>
+          </div>
+          <div id="searchResultsCount" class="search-results-info" style="display: none;"></div>
+        </div>
+
         <!-- Category Filter Tabs (Data-Driven) -->
         <div class="filter-tabs" id="filterTabsContainer" role="tablist" aria-label="Bracelet Intention Categories">
           <!-- Populated dynamically from data.js -->
@@ -525,6 +538,16 @@
             </a>
             <button type="button" class="btn btn-outline" id="modalEnquireBtn" style="width: 100%; justify-content: center;">
               Fill Concierge Enquiry Form
+            </button>
+            <button type="button" class="btn btn-share" id="modalShareBtn" style="width: 100%; justify-content: center;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+              </svg>
+              <span id="modalShareBtnText">Share This Piece</span>
             </button>
           </div>
         </div>

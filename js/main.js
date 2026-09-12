@@ -14,6 +14,9 @@
   const BRACELET_CATEGORIES = window.BRACELET_CATEGORIES || [];
   const BRACELET_DATA = window.BRACELET_DATA || [];
 
+  let currentCategory = 'all';
+  let currentSearchQuery = '';
+
 // Clear any previous custom test items from localStorage so official dataset renders cleanly
 try {
   localStorage.removeItem('laurum_custom_bracelets');
@@ -22,20 +25,24 @@ try {
   // Safe fallback
 }
 
-console.log(`✦ L'AURUM ATELIER: Loaded ${BRACELET_DATA.length} intention bracelets into catalogue.`);
+console.log(`✦ SATTVA: Loaded ${BRACELET_DATA.length} intention bracelets into catalogue.`);
 
 document.addEventListener('DOMContentLoaded', () => {
   initBrandDetails();
   initIntentionCards();
   initCategoryFilters();
-  renderBraceletGrid('all');
+  initSearch();
+  renderBraceletGrid();
   populateEnquirySelect();
   initModal();
   initNavbar();
   initMobileDrawer();
   initEnquiryForm();
   initFooterLinks();
+  checkUrlPieceHash();
 });
+
+window.addEventListener('hashchange', checkUrlPieceHash);
 
 /**
  * Initialize brand details & copyright
@@ -134,6 +141,7 @@ function initCategoryFilters() {
 }
 
 function activateCategory(categoryId) {
+  currentCategory = categoryId;
   const container = document.getElementById('filterTabsContainer');
   if (!container) return;
 
@@ -143,26 +151,103 @@ function activateCategory(categoryId) {
     btn.setAttribute('aria-selected', isTarget ? 'true' : 'false');
   });
 
-  renderBraceletGrid(categoryId);
+  renderBraceletGrid();
 }
 
 /**
- * Render Purpose-First Product Cards with Real Photography
+ * Initialize Live Search by mineral stone, intention, code, or description
  */
-function renderBraceletGrid(selectedCategory = 'all') {
+function initSearch() {
+  const searchInput = document.getElementById('collectionSearchInput');
+  const clearBtn = document.getElementById('clearSearchBtn');
+  if (!searchInput) return;
+
+  searchInput.addEventListener('input', (e) => {
+    currentSearchQuery = e.target.value;
+    if (clearBtn) {
+      clearBtn.style.display = currentSearchQuery.trim() ? 'block' : 'none';
+    }
+    renderBraceletGrid();
+  });
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      currentSearchQuery = '';
+      clearBtn.style.display = 'none';
+      renderBraceletGrid();
+      searchInput.focus();
+    });
+  }
+}
+
+/**
+ * Render Purpose-First Product Cards with Real Photography & Live Search Filter
+ */
+function renderBraceletGrid() {
   const grid = document.getElementById('braceletGrid');
+  const resultsCountEl = document.getElementById('searchResultsCount');
   if (!grid) return;
 
-  const filteredItems = selectedCategory === 'all'
-    ? BRACELET_DATA
-    : BRACELET_DATA.filter(item => item.category === selectedCategory);
+  const query = currentSearchQuery.toLowerCase().trim();
+
+  const filteredItems = BRACELET_DATA.filter(item => {
+    const categoryMatch = currentCategory === 'all' || item.category === currentCategory;
+    if (!categoryMatch) return false;
+
+    if (!query) return true;
+
+    const nameMatch = item.name.toLowerCase().includes(query);
+    const codeMatch = item.code.toLowerCase().includes(query);
+    const posMatch = (item.positioning || '').toLowerCase().includes(query);
+    const descMatch = (item.shortDescription || '').toLowerCase().includes(query) || (item.fullDescription || '').toLowerCase().includes(query);
+    const catLabelMatch = (item.categoryLabel || '').toLowerCase().includes(query);
+    const stonesMatch = item.stones && item.stones.some(s => 
+      s.name.toLowerCase().includes(query) || (s.description || '').toLowerCase().includes(query)
+    );
+    const attributesMatch = item.attributes && item.attributes.some(a => 
+      a.toLowerCase().includes(query)
+    );
+
+    return nameMatch || codeMatch || posMatch || descMatch || catLabelMatch || stonesMatch || attributesMatch;
+  });
+
+  // Update live search results count
+  if (resultsCountEl) {
+    if (query) {
+      resultsCountEl.style.display = 'block';
+      resultsCountEl.innerHTML = `✦ Showing ${filteredItems.length} intention ${filteredItems.length === 1 ? 'piece' : 'pieces'} for "<em>${escapeHTML(currentSearchQuery)}</em>"`;
+    } else {
+      resultsCountEl.style.display = 'none';
+    }
+  }
 
   if (filteredItems.length === 0) {
     grid.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; color: var(--text-muted);">
-        <p>No bracelets currently catalogued under this intention.</p>
+      <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1.5rem; background: var(--bg-card); border: 1px solid var(--gold-border); border-radius: var(--radius-sm);">
+        <p style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--gold-light); margin-bottom: 0.5rem;">No Intention Pieces Found</p>
+        <p style="color: var(--text-muted); font-size: 0.88rem; max-width: 440px; margin: 0 auto 1.5rem;">
+          No pieces matched "<strong>${escapeHTML(currentSearchQuery)}</strong>" under the selected intention. Try searching by another stone (e.g. Pyrite, Citrine, Hematite) or reset your filter.
+        </p>
+        <button type="button" class="btn btn-outline" id="resetSearchBtn" style="font-size: 0.75rem;">
+          Reset Search &amp; View All 22 Pieces
+        </button>
       </div>
     `;
+
+    document.getElementById('resetSearchBtn')?.addEventListener('click', () => {
+      const searchInput = document.getElementById('collectionSearchInput');
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (searchInput) searchInput.value = '';
+      if (clearBtn) clearBtn.style.display = 'none';
+      currentSearchQuery = '';
+      currentCategory = 'all';
+      const container = document.getElementById('filterTabsContainer');
+      container?.querySelectorAll('.filter-tab').forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === 0);
+      });
+      renderBraceletGrid();
+    });
     return;
   }
 
@@ -291,6 +376,93 @@ function initModal() {
       }, 600);
     }
   });
+
+  const modalShareBtn = document.getElementById('modalShareBtn');
+  const modalShareBtnText = document.getElementById('modalShareBtnText');
+
+  modalShareBtn?.addEventListener('click', () => {
+    if (!currentOpenPiece) return;
+
+    const cleanUrl = window.location.href.split('#')[0];
+    const shareUrl = `${cleanUrl}#piece=${encodeURIComponent(currentOpenPiece.code)}`;
+
+    const showCopiedFeedback = () => {
+      if (modalShareBtnText) {
+        const originalText = modalShareBtnText.textContent;
+        modalShareBtnText.textContent = '✓ Link Copied to Clipboard!';
+        modalShareBtn.style.borderColor = 'var(--gold-primary)';
+        modalShareBtn.style.color = 'var(--gold-light)';
+        setTimeout(() => {
+          modalShareBtnText.textContent = originalText;
+          modalShareBtn.style.borderColor = '';
+          modalShareBtn.style.color = '';
+        }, 2500);
+      }
+    };
+
+    if (navigator.share) {
+      navigator.share({
+        title: `SATTVA — ${currentOpenPiece.name} (${currentOpenPiece.code})`,
+        text: `Discover the ${currentOpenPiece.name} intention bracelet at SATTVA: "${currentOpenPiece.positioning}"`,
+        url: shareUrl
+      }).catch(() => {
+        // Fallback to clipboard if user dismissed native share dialog
+      });
+    } else {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          showCopiedFeedback();
+        }).catch(() => {
+          // Fallback if clipboard API restricted on file:///
+          copyViaTextarea(shareUrl);
+          showCopiedFeedback();
+        });
+      } else {
+        copyViaTextarea(shareUrl);
+        showCopiedFeedback();
+      }
+    }
+  });
+}
+
+function copyViaTextarea(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.top = '0';
+  ta.style.left = '0';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try {
+    document.execCommand('copy');
+  } catch (err) {
+    console.warn('Clipboard copy fallback error:', err);
+  }
+  document.body.removeChild(ta);
+}
+
+/**
+ * Automatically open piece modal if URL contains #piece=BR02-XXX
+ */
+function checkUrlPieceHash() {
+  const hash = window.location.hash;
+  if (hash && hash.includes('piece=')) {
+    const rawCode = decodeURIComponent(hash.split('piece=')[1] || '').trim().toLowerCase();
+    if (!rawCode) return;
+    const match = BRACELET_DATA.find(p => 
+      p.code.toLowerCase() === rawCode || 
+      p.id.toLowerCase() === rawCode
+    );
+    if (match) {
+      setTimeout(() => {
+        const coll = document.getElementById('collection');
+        if (coll) coll.scrollIntoView({ behavior: 'smooth' });
+        openModal(match.id);
+      }, 350);
+    }
+  }
 }
 
 function openModal(id) {
