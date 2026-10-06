@@ -17,10 +17,10 @@
   heroImage: "assets/images/products/hero-pedestal-bracelet.jpg",
   heroImageAlt: "SATTVA Fine Intention Bracelet Showcase",
   craftsmanshipImage: "assets/images/products/dhanyog-studio.jpg",
-  enquiryEmail: "valo96k@gmail.com",
-  enquiryMobile: "+91 76663 68056",
-  enquiryWhatsApp: "+91 76663 68056",
-  whatsappNumberDigits: "917666368056",
+  enquiryEmail: "smita.kupekar@gmail.com",
+  enquiryMobile: "+91 99202 91895",
+  enquiryWhatsApp: "+91 99202 91895",
+  whatsappNumberDigits: "919920291895",
   wellnessDisclaimer: "These descriptions reflect the intended spiritual and wellness positioning of the collection and are not medical advice or guarantees of health outcomes.",
   year: new Date().getFullYear()
 };

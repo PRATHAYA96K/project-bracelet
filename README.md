@@ -109,6 +109,6 @@ This project is pre-configured for GitHub Pages:
 
 For bespoke pieces, custom intention consultations, or catalogue questions:
 
-- **WhatsApp / Phone:** [+91 76663 68056](https://wa.me/917666368056)
-- **Email:** [valo96k@gmail.com](mailto:valo96k@gmail.com)
+- **WhatsApp / Phone:** [+91 99202 91895](https://wa.me/919920291895)
+- **Email:** [smita.kupekar@gmail.com](mailto:smita.kupekar@gmail.com)
 - **Showcase:** [SATTVA Live Catalogue](https://prathaya96k.github.io/project-bracelet/)

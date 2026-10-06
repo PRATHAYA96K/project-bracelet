@@ -496,7 +496,8 @@ function openModal(id) {
   const modalWhatsAppBtn = document.getElementById('modalWhatsAppBtn');
   if (modalWhatsAppBtn) {
     const waMsg = `Hello SATTVA, I am interested in learning more about the ${piece.name} (${piece.code}) intention bracelet.`;
-    modalWhatsAppBtn.href = `https://api.whatsapp.com/send?phone=917666368056&text=${encodeURIComponent(waMsg)}`;
+    const waNumber = BRAND_CONFIG.whatsappNumberDigits || '919920291895';
+    modalWhatsAppBtn.href = `https://api.whatsapp.com/send?phone=${waNumber}&text=${encodeURIComponent(waMsg)}`;
   }
 
   // View toggle for pieces with full posters
@@ -780,8 +781,10 @@ function initEnquiryForm() {
 
       const lines = buildWhatsAppMessage(data);
       const encodedMsg = encodeURIComponent(lines);
-      const waUniversalUrl = `https://api.whatsapp.com/send?phone=917666368056&text=${encodedMsg}`;
-      const waShortUrl = `https://wa.me/917666368056?text=${encodedMsg}`;
+      const waDigits = BRAND_CONFIG.whatsappNumberDigits || '919920291895';
+      const waDisplay = BRAND_CONFIG.enquiryWhatsApp || '+91 99202 91895';
+      const waUniversalUrl = `https://api.whatsapp.com/send?phone=${waDigits}&text=${encodedMsg}`;
+      const waShortUrl = `https://wa.me/${waDigits}?text=${encodedMsg}`;
 
       // Copy text to clipboard as seamless backup
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -799,7 +802,7 @@ function initEnquiryForm() {
           <span style="font-size: 0.85rem; color: #d6f8e2;">Opening WhatsApp with your enquiry for <em>${escapeHTML(data.piece)}</em>.</span>
           <div style="display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.85rem;">
             <a href="${waUniversalUrl}" class="btn btn-whatsapp" style="width: 100%; justify-content: center;">
-              Tap Here to Open WhatsApp (+91 76663 68056)
+              Tap Here to Open WhatsApp (${waDisplay})
             </a>
             <a href="${waShortUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="width: 100%; justify-content: center; font-size: 0.72rem;">
               Alternative WhatsApp Link
@@ -821,15 +824,18 @@ function initEnquiryForm() {
     const data = validate(true);
     if (!data) return;
 
+    const targetEmail = BRAND_CONFIG.enquiryEmail || 'smita.kupekar@gmail.com';
+    const waDigits = BRAND_CONFIG.whatsappNumberDigits || '919920291895';
+    const waDisplay = BRAND_CONFIG.enquiryWhatsApp || '+91 99202 91895';
     const subject = `SATTVA Intention Bracelet Enquiry — ${data.piece}`;
     const body = buildEmailBody(data);
-    const mailtoUrl = `mailto:valo96k@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=valo96k@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    const waUrl = `https://api.whatsapp.com/send?phone=917666368056&text=${encodeURIComponent(buildWhatsAppMessage(data))}`;
+    const mailtoUrl = `mailto:${targetEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${targetEmail}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const waUrl = `https://api.whatsapp.com/send?phone=${waDigits}&text=${encodeURIComponent(buildWhatsAppMessage(data))}`;
 
-    // 1. Send silent background delivery via FormSubmit AJAX to ensure valo96k@gmail.com receives the submission
+    // 1. Send silent background delivery via FormSubmit AJAX to ensure smita.kupekar@gmail.com receives the submission
     try {
-      fetch('https://formsubmit.co/ajax/valo96k@gmail.com', {
+      fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -872,7 +878,7 @@ function initEnquiryForm() {
             📬 Open in Default Mail App (Apple Mail / Outlook)
           </a>
           <a href="${waUrl}" class="btn btn-whatsapp" style="width: 100%; justify-content: center; font-size: 0.76rem;">
-            💬 Or Send via WhatsApp (+91 76663 68056)
+            💬 Or Send via WhatsApp (${waDisplay})
           </a>
         </div>
       </div>
